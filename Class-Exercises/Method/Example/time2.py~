@@ -1,0 +1,115 @@
+class Time(object):
+	def __init__(self, hour=0, minute=0, second=0):
+		self.hour = hour
+		self.minute = minute
+		self.second = second
+	##def _str_(self):
+	##	return '%.2d:%.2d:%.2d' % (self.hour, self.minute, self.second)
+	def print_time(self):
+		print '%.2d:%.2d:%.2d' % (self.hour, self.minute, self.second)
+	#print _str_(self)
+	def time_to_int(self):
+		minutes = self.hour * 60 + self.minute
+		seconds = minutes * 60 + self.second
+		return seconds
+	def is_after(self, other):
+		return self.time_to_int() > other.time_to_int()
+	def _add_(self, other):
+		if isinstance(other, Time):
+			return self.add_time(other)
+		else:
+			return self.increment(other)
+	def add_time(self, other):
+		assert self.is_valid() and other.is_valid()
+		seconds = self.time_to_int() + other.time_to_int()
+		return int_to_time(seconds)
+	def increment(self, seconds):
+		seconds += self.time_to_int()
+		return int_to_time(seconds)
+	def is_valid(self):
+		if self.hour < 0 or self.minute < 0 or self.second<0:
+			return False
+		if self.minute >= 60 or self.second >= 60:
+			return False
+		return True
+
+def int_to_time(seconds):
+	minutes, second = divmod(seconds, 60)
+	hour, minute = divmod(minutes, 60)
+	time = Time()
+	time.hour = hour
+	time.minute = minute
+	time.second = second
+	return time
+def main():
+	time = Time()
+	time.__init__()
+	print 'Initial Time : ',time.print_time()	
+	start = Time()
+	start.hour = 9
+	start.minute = 45
+	start.second = 00
+	print "Start Time : ", start.print_time()
+	
+	end = start.increment(1337)
+	print "End Time", end.print_time()
+
+	print 'Is end after start ?',
+	print end.is_after(start)
+
+	print 'Using _str_'
+	print "Start Time : ",	start.print_time()
+	print "End Time", end.print_time()
+	
+	"""start = Time()
+	start.hour = 9
+	start.minute = 45
+	start.second = 00
+	"""
+	print "Start Time : ",	start.print_time()
+
+	duration = Time()
+	duration.hour = 1
+	duration.minute = 35
+	duration.second = 00
+	print 'Duration : ', duration.print_time()
+	#new = Time()	
+	sum1 = Time()	
+	sum1 = start.add_time(duration)
+	print 'Correpnding End Time', sum1.print_time()
+
+	duration = Time()
+	duration.hour = 1
+	duration.minute = 33
+	duration.second = 7
+	print 'Duration : ', duration.print_time()
+	sum1 = start.add_time(duration)
+	print 'Correpnding End Time', sum1.print_time()
+	
+	print 'Example of polymorphism'
+	t1 = Time(7, 43)
+	"""t1.hour = 7
+	t1.minute = 43
+	t1.second = 00"""
+	print 'T1 : ', t1.print_time()
+	
+	t2 = Time()
+	t2.hour = 7
+	t2.minute = 41
+	t2.second = 00
+	print 'T2 : ', t2.print_time()
+	
+	t3 = Time()
+	t3.hour = 7
+	t3.minute = 37
+	t3.second = 00
+	print 'T3 : ', t3.print_time()
+
+	total = Time()
+	total = t1.add_time(t2)
+	total = total.add_time(t3) 
+	print 'Sum : ', total.print_time()
+	
+if __name__=='__main__':
+	main()
+			
